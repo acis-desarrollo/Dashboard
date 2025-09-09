@@ -4,6 +4,7 @@ import { useSidebar } from "@/hooks/use-sidebar"
 import { Route } from "next"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { useState } from "react"
 
 type MenuItemProps = {
    children: React.ReactNode
@@ -16,15 +17,26 @@ export default function MenuItem({ icon: Icon, link = '#', children }: MenuItemP
    const { isCollapsed } = useSidebar()
    const pathname = usePathname()
    const isActive = pathname === link
+   const [showTooltip, setShowTooltip] = useState(false)
 
    if (isCollapsed) {
       return (
-         <Link
-            href={link}
-            className={`w-full flex items-center justify-center p-2 h-12 transition-colors rounded-md cursor-pointer ${isActive ? 'bg-blue-100 text-blue-700 border-l-4 border-blue-600' : 'hover:bg-slate-200 text-slate-600'}`}
-         >
-            {Icon && <Icon className="h-5 w-5" />}
-         </Link>
+         <div className="relative">
+            <Link
+               href={link}
+               className={`w-full flex items-center justify-center p-2 h-12 transition-colors rounded-md cursor-pointer ${isActive ? 'bg-blue-100 text-blue-700 border-l-4 border-blue-600' : 'hover:bg-slate-200 text-slate-600'}`}
+               onMouseEnter={() => setShowTooltip(true)}
+               onMouseLeave={() => setShowTooltip(false)}
+            >
+               {Icon && <Icon className="h-5 w-5" />}
+            </Link>
+            {showTooltip && (
+               <div className="absolute left-full ml-2 top-1/2 transform -translate-y-1/2 z-50 px-2 py-1 bg-gray-900 text-white text-sm rounded-md whitespace-nowrap shadow-lg">
+                  {children}
+                  <div className="absolute right-full top-1/2 transform -translate-y-1/2 w-0 h-0 border-t-4 border-b-4 border-r-4 border-transparent border-r-gray-900"></div>
+               </div>
+            )}
+         </div>
       )
    }
 
