@@ -22,12 +22,7 @@ export const useSidebar = create<SidebarState>()(
             }
          },
          toggleMobile: () => set((state) => ({ isMobileOpen: !state.isMobileOpen })),
-         setMobileOpen: (open: boolean) => set({ isMobileOpen: open }),
-         get isActive() {
-            if (typeof window === "undefined") return false
-            // Ajusta la ruta según la página que quieras detectar
-            return window.location.pathname === "/pagina"
-         }
+        setMobileOpen: (open: boolean) => set({ isMobileOpen: open })
       }),
       {
          name: "sidebar-storage",
