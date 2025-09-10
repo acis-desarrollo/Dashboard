@@ -33,7 +33,7 @@ export default function MenuItem({ icon: Icon, link = '#', children }: MenuItemP
             {showTooltip && (
                <div className="absolute left-full ml-2 top-1/2 transform -translate-y-1/2 z-50 px-2 py-1 bg-gray-900 text-white text-sm rounded-md whitespace-nowrap shadow-lg">
                   {children}
-                  <div className="absolute right-full top-1/2 transform -translate-y-1/2 w-0 h-0 border-t-4 border-b-4 border-r-4 border-transparent border-r-gray-900"></div>
+                  <div className="absolute right-full top-1/2 transform -translate-y-1/2 w-0 h-0 border-t-[4px] border-b-[4px] border-r-[4px] border-transparent border-r-gray-900"></div>
                </div>
             )}
          </div>
