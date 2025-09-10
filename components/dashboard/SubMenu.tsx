@@ -42,30 +42,47 @@ export default function SubMenu({ label, children }: SubMenuProps) {
             </button>
             {showTooltip && (
                <div 
-                  className="fixed left-20 z-[9999] bg-white border border-gray-200 rounded-lg shadow-xl min-w-48"
+                  className="fixed left-20 z-[9999] bg-slate-800 rounded-lg shadow-2xl min-w-52 border border-slate-700"
                   style={{ 
                      top: `${document.querySelector(`[data-submenu="${label}"]`)?.getBoundingClientRect().top || 0}px` 
                   }}
                   onMouseEnter={() => setShowTooltip(true)}
                   onMouseLeave={() => setShowTooltip(false)}
                >
-                  <div className="px-3 py-2 border-b border-gray-100 bg-gray-50 rounded-t-lg">
-                     <span className="font-semibold text-gray-800 text-sm">{label}</span>
+                  {/* Título del SubMenu */}
+                  <div className="px-4 py-3 bg-slate-700 rounded-t-lg border-b border-slate-600">
+                     <span className="font-semibold text-white text-sm">{label}</span>
                   </div>
-                  <div className="py-1">
+                  
+                  {/* Lista de elementos navegables */}
+                  <div className="py-2">
                      {Children.map(children, (child) => {
                         if (isValidElement(child)) {
-                           const childProps = child.props as { link?: string, children?: ReactNode }
+                           const childProps = child.props as { 
+                              link?: string, 
+                              children?: ReactNode,
+                              icon?: React.ElementType 
+                           }
+                           const Icon = childProps.icon
+                           
                            return (
-                              <div key={childProps.link} className="px-1">
-                                 {child}
-                              </div>
+                              <a
+                                 key={childProps.link}
+                                 href={childProps.link}
+                                 className="flex items-center gap-3 px-4 py-2.5 text-gray-200 hover:bg-slate-700 hover:text-white transition-colors text-sm"
+                                 onClick={() => setShowTooltip(false)}
+                              >
+                                 {Icon && <Icon className="h-4 w-4 flex-shrink-0" />}
+                                 <span>{childProps.children}</span>
+                              </a>
                            )
                         }
                         return null
                      })}
                   </div>
-                  <div className="absolute right-full top-4 w-0 h-0 border-t-[6px] border-b-[6px] border-r-[6px] border-transparent border-r-white"></div>
+                  
+                  {/* Flecha indicadora */}
+                  <div className="absolute right-full top-4 w-0 h-0 border-t-[8px] border-b-[8px] border-r-[8px] border-transparent border-r-slate-800"></div>
                </div>
             )}
          </div>
