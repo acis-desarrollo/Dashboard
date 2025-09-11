@@ -17,6 +17,7 @@ export default function SubMenu({ label, children }: SubMenuProps) {
    const { isCollapsed } = useSidebar()
    const [isOpen, setIsOpen] = useState(false)
    const [showTooltip, setShowTooltip] = useState(false)
+  const [isTooltipPinned, setIsTooltipPinned] = useState(false)
    const [tooltipPosition, setTooltipPosition] = useState({ top: 0 })
    const pathname = usePathname()
 
@@ -33,30 +34,61 @@ export default function SubMenu({ label, children }: SubMenuProps) {
    const isActive = hasActiveChild
 
    const handleMouseEnter = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (isTooltipPinned) return
       const rect = e.currentTarget.getBoundingClientRect()
       setTooltipPosition({ top: rect.top })
       setShowTooltip(true)
    }
+
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+    const rect = e.currentTarget.getBoundingClientRect()
+    setTooltipPosition({ top: rect.top })
+    setIsTooltipPinned(!isTooltipPinned)
+    setShowTooltip(!isTooltipPinned)
+  }
+
+  const handleMouseLeave = () => {
+    if (!isTooltipPinned) {
+      setShowTooltip(false)
+    }
+  }
+
+  const handleTooltipMouseLeave = () => {
+    if (!isTooltipPinned) {
+      setShowTooltip(false)
+    }
+  }
+
+  const handleLinkClick = () => {
+    setShowTooltip(false)
+    setIsTooltipPinned(false)
+  }
+
+  // Cerrar tooltip al hacer click fuera
+  const handleOutsideClick = () => {
+    setShowTooltip(false)
+    setIsTooltipPinned(false)
+  }
    if (isCollapsed) {
       return (
          <div className="relative">
             <button
                className={`w-full flex items-center justify-center p-2 h-12 transition-colors rounded-md cursor-pointer ${isActive ? 'bg-blue-100 text-blue-700 border-l-4 border-blue-600' : 'hover:bg-slate-200 text-slate-600'}`}
                onMouseEnter={handleMouseEnter}
-               onMouseLeave={() => setShowTooltip(false)}
+              onMouseLeave={handleMouseLeave}
+              onClick={handleClick}
             >
                <UsersIcon className="h-5 w-5" />
             </button>
-            {showTooltip && (
+           {(showTooltip || isTooltipPinned) && (
                <div 
                   className="fixed left-20 z-[9999] bg-slate-800 rounded-lg shadow-2xl min-w-52 border border-slate-700"
                   style={{ 
                      top: `${tooltipPosition.top}px` 
                   }}
-                  onMouseEnter={() => setShowTooltip(true)}
-                  onMouseLeave={() => setShowTooltip(false)}
-                  onMouseEnter={() => setShowTooltip(true)}
-                  onMouseLeave={() => setShowTooltip(false)}
+                 onMouseEnter={() => !isTooltipPinned && setShowTooltip(true)}
+                 onMouseLeave={handleTooltipMouseLeave}
                >
                   {/* Título del SubMenu */}
                   <div className="px-4 py-3 bg-slate-700 rounded-t-lg border-b border-slate-600">
@@ -79,7 +111,7 @@ export default function SubMenu({ label, children }: SubMenuProps) {
                                  key={childProps.link}
                                  href={childProps.link || '#'}
                                 className="flex items-center gap-3 px-4 py-2.5 text-gray-200 hover:bg-slate-700 hover:text-white transition-colors text-sm cursor-pointer"
-                                 onClick={() => setShowTooltip(false)}
+                                onClick={handleLinkClick}
                               >
                                  {Icon && <Icon className="h-4 w-4 flex-shrink-0" />}
                                 <span className="font-medium">{childProps.children}</span>
@@ -94,6 +126,14 @@ export default function SubMenu({ label, children }: SubMenuProps) {
                   <div className="absolute right-full top-4 w-0 h-0 border-t-[8px] border-b-[8px] border-r-[8px] border-transparent border-r-slate-800"></div>
                </div>
             )}
+           
+           {/* Overlay para cerrar tooltip al hacer click fuera */}
+           {isTooltipPinned && (
+              <div 
+                 className="fixed inset-0 z-[9998]" 
+                 onClick={handleOutsideClick}
+              />
+           )}
          </div>
       )
    }
