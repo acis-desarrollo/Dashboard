@@ -18,6 +18,13 @@ export default function MenuItem({ icon: Icon, link = '#', children }: MenuItemP
    const pathname = usePathname()
    const isActive = pathname === link
    const [showTooltip, setShowTooltip] = useState(false)
+   const [tooltipPosition, setTooltipPosition] = useState({ top: 0 })
+
+   const handleMouseEnter = (e: React.MouseEvent<HTMLAnchorElement>) => {
+      const rect = e.currentTarget.getBoundingClientRect()
+      setTooltipPosition({ top: rect.top })
+      setShowTooltip(true)
+   }
 
    if (isCollapsed) {
       return (
@@ -25,15 +32,22 @@ export default function MenuItem({ icon: Icon, link = '#', children }: MenuItemP
             <Link
                href={link}
                className={`w-full flex items-center justify-center p-2 h-12 transition-colors rounded-md cursor-pointer ${isActive ? 'bg-blue-100 text-blue-700 border-l-4 border-blue-600' : 'hover:bg-slate-200 text-slate-600'}`}
-               onMouseEnter={() => setShowTooltip(true)}
+               onMouseEnter={handleMouseEnter}
                onMouseLeave={() => setShowTooltip(false)}
             >
                {Icon && <Icon className="h-5 w-5" />}
             </Link>
             {showTooltip && (
-               <div className="fixed left-20 top-1/2 transform -translate-y-1/2 z-[9999] px-3 py-2 bg-gray-900 text-white text-sm rounded-lg whitespace-nowrap shadow-xl border border-gray-700">
-                  {children}
-                 <div className="absolute right-full top-1/2 transform -translate-y-1/2 w-0 h-0 border-t-[6px] border-b-[6px] border-r-[6px] border-transparent border-r-gray-900"></div>
+               <div 
+                  className="fixed left-20 z-[9999] bg-slate-800 rounded-lg shadow-2xl border border-slate-700 px-4 py-3"
+                  style={{ 
+                     top: `${tooltipPosition.top}px` 
+                  }}
+                  onMouseEnter={() => setShowTooltip(true)}
+                  onMouseLeave={() => setShowTooltip(false)}
+               >
+                  <span className="font-medium text-white text-sm whitespace-nowrap">{children}</span>
+                  <div className="absolute right-full top-4 w-0 h-0 border-t-[8px] border-b-[8px] border-r-[8px] border-transparent border-r-slate-800"></div>
                </div>
             )}
          </div>
