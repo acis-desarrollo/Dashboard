@@ -1,6 +1,7 @@
 'use client'
 
 import { Children, isValidElement, ReactNode, useState } from "react"
+import Link from "next/link"
 import { useSidebar } from "@/hooks/use-sidebar"
 import { ChevronDownIcon, ChevronRightIcon, UsersIcon } from "@heroicons/react/24/outline"
 import { usePathname } from "next/navigation"
