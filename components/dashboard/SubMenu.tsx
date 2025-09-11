@@ -55,6 +55,8 @@ export default function SubMenu({ label, children }: SubMenuProps) {
                   }}
                   onMouseEnter={() => setShowTooltip(true)}
                   onMouseLeave={() => setShowTooltip(false)}
+                  onMouseEnter={() => setShowTooltip(true)}
+                  onMouseLeave={() => setShowTooltip(false)}
                >
                   {/* Título del SubMenu */}
                   <div className="px-4 py-3 bg-slate-700 rounded-t-lg border-b border-slate-600">
