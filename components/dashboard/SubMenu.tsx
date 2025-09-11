@@ -76,11 +76,11 @@ export default function SubMenu({ label, children }: SubMenuProps) {
                               <Link
                                  key={childProps.link}
                                  href={childProps.link || '#'}
-                                 className="flex items-center gap-3 px-4 py-2.5 text-gray-200 hover:bg-slate-700 hover:text-white transition-colors text-sm"
+                                className="flex items-center gap-3 px-4 py-2.5 text-gray-200 hover:bg-slate-700 hover:text-white transition-colors text-sm cursor-pointer"
                                  onClick={() => setShowTooltip(false)}
                               >
                                  {Icon && <Icon className="h-4 w-4 flex-shrink-0" />}
-                                 <span>{childProps.children}</span>
+                                <span className="font-medium">{childProps.children}</span>
                               </Link>
                            )
                         }
