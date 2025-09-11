@@ -16,6 +16,7 @@ export default function SubMenu({ label, children }: SubMenuProps) {
    const { isCollapsed } = useSidebar()
    const [isOpen, setIsOpen] = useState(false)
    const [showTooltip, setShowTooltip] = useState(false)
+   const [tooltipPosition, setTooltipPosition] = useState({ top: 0 })
    const pathname = usePathname()
 
    const hasActiveChild = Children.toArray(children).some((child) => {
@@ -30,12 +31,17 @@ export default function SubMenu({ label, children }: SubMenuProps) {
 
    const isActive = hasActiveChild
 
+   const handleMouseEnter = (e: React.MouseEvent<HTMLButtonElement>) => {
+      const rect = e.currentTarget.getBoundingClientRect()
+      setTooltipPosition({ top: rect.top })
+      setShowTooltip(true)
+   }
    if (isCollapsed) {
       return (
          <div className="relative">
             <button
                className={`w-full flex items-center justify-center p-2 h-12 transition-colors rounded-md cursor-pointer ${isActive ? 'bg-blue-100 text-blue-700 border-l-4 border-blue-600' : 'hover:bg-slate-200 text-slate-600'}`}
-               onMouseEnter={() => setShowTooltip(true)}
+               onMouseEnter={handleMouseEnter}
                onMouseLeave={() => setShowTooltip(false)}
             >
                <UsersIcon className="h-5 w-5" />
@@ -44,7 +50,7 @@ export default function SubMenu({ label, children }: SubMenuProps) {
                <div 
                   className="fixed left-20 z-[9999] bg-slate-800 rounded-lg shadow-2xl min-w-52 border border-slate-700"
                   style={{ 
-                     top: `${document.querySelector(`[data-submenu="${label}"]`)?.getBoundingClientRect().top || 0}px` 
+                     top: `${tooltipPosition.top}px` 
                   }}
                   onMouseEnter={() => setShowTooltip(true)}
                   onMouseLeave={() => setShowTooltip(false)}
@@ -92,7 +98,6 @@ export default function SubMenu({ label, children }: SubMenuProps) {
    return (
       <CustomCollapsible isOpen={isOpen} onToggle={() => setIsOpen(!isOpen)}>
          <button
-            data-submenu={label}
             className={`w-full flex items-center justify-between p-3 h-12 transition-colors rounded-md ${isActive ? 'bg-blue-100 text-blue-700 border-l-4 border-blue-600' : 'hover:bg-slate-200 text-slate-600'}`}
          >
             <div className="flex items-center gap-3">
