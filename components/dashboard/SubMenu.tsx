@@ -23,9 +23,9 @@ export default function SubMenu({ label, children }: SubMenuProps) {
 
    const hasActiveChild = Children.toArray(children).some((child) => {
       if (isValidElement(child)) {
-         const props = child.props as { href?: string }
-         if (props.href) {
-            return pathname.startsWith(props.href)
+         const props = child.props as { link?: string }
+         if (props.link) {
+            return pathname.startsWith(props.link)
          }
       }
       return false
