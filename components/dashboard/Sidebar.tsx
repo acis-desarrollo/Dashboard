@@ -49,7 +49,7 @@ export default function Sidebar() {
                </div>
 
                <NavMenu>
-                  <MenuItem icon={HomeIcon} link='/dashboard'>Escritorio</MenuItem>
+                  <MenuItem icon={HomeIcon} link='/'>Escritorio</MenuItem>
                   <SubMenu label="Usuarios">
                      <MenuItem icon={UsersIcon} link='/usuarios'>Todos los usuarios</MenuItem>
                   </SubMenu>
