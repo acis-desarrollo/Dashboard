@@ -46,7 +46,7 @@ export default function Header({ usuario }: HeaderProps) {
          icono: UserIcon,
          label: 'Mi perfil',
          action: () => {
-            router.push('/admin/perfil')
+            router.push('/perfil')
             setIsPerfilMenu(false)
          }
       },

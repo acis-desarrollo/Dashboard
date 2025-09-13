@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { MagnifyingGlassIcon, PlusIcon, EyeIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline'
+import { MagnifyingGlassIcon, PlusIcon, EyeIcon, PencilIcon, TrashIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link'
 
 type Cliente = {
@@ -51,7 +51,7 @@ export default function ClientesPage() {
    const [searchTerm, setSearchTerm] = useState('')
    const [searchType, setSearchType] = useState<'numero_documento' | 'correo'>('numero_documento')
 
-   // Datos de ejemplo basados en tu estructura
+   // Datos de ejemplo con más páginas para probar la paginación
    const clientesEjemplo: ClientesResponse = {
       clientes: [
          {
@@ -134,10 +134,10 @@ export default function ClientesPage() {
          }
       ],
       meta: {
-         total: 3,
-         pagina: 1,
+         total: 150,
+         pagina: 5,
          limite: 10,
-         paginas: 1
+         paginas: 15
       }
    }
 
@@ -163,8 +163,59 @@ export default function ClientesPage() {
 
    const handleSearch = (e: React.FormEvent) => {
       e.preventDefault()
-      // Aquí iría la lógica para buscar en el servidor
       console.log('Buscando:', searchType, searchTerm)
+   }
+
+   const handlePageChange = (newPage: number) => {
+      if (newPage >= 1 && newPage <= meta.paginas) {
+         setMeta(prev => ({ ...prev, pagina: newPage }))
+         // Aquí harías la llamada a la API con la nueva página
+         console.log('Cambiar a página:', newPage)
+      }
+   }
+
+   // Función para generar los números de página dinámicamente
+   const generatePageNumbers = () => {
+      const { pagina, paginas } = meta
+      const pages = []
+
+      if (paginas <= 7) {
+         // Si hay 7 páginas o menos, mostrar todas
+         for (let i = 1; i <= paginas; i++) {
+            pages.push(i)
+         }
+      } else {
+         // Siempre mostrar las primeras 2 páginas
+         pages.push(1, 2)
+
+         if (pagina > 4) {
+            pages.push('...')
+         }
+
+         // Mostrar páginas alrededor de la página actual
+         const start = Math.max(3, pagina - 1)
+         const end = Math.min(paginas - 2, pagina + 1)
+
+         for (let i = start; i <= end; i++) {
+            if (!pages.includes(i)) {
+               pages.push(i)
+            }
+         }
+
+         if (pagina < paginas - 3) {
+            pages.push('...')
+         }
+
+         // Siempre mostrar las últimas 2 páginas
+         if (!pages.includes(paginas - 1)) {
+            pages.push(paginas - 1)
+         }
+         if (!pages.includes(paginas)) {
+            pages.push(paginas)
+         }
+      }
+
+      return pages
    }
 
    if (loading) {
@@ -183,7 +234,7 @@ export default function ClientesPage() {
                <p className="text-gray-600">Gestiona todos los clientes del sistema</p>
             </div>
             <Link
-               href="/admin/clientes/crear"
+               href="/clientes/crear"
                className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
             >
                <PlusIcon className="w-5 h-5" />
@@ -325,14 +376,14 @@ export default function ClientesPage() {
                               <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                  <div className="flex items-center space-x-2">
                                     <Link
-                                       href={`/admin/clientes/${cliente.id}`}
+                                       href={`/clientes/${cliente.id}`}
                                        className="text-blue-600 hover:text-blue-900 p-1 rounded hover:bg-blue-50"
                                        title="Ver detalles"
                                     >
                                        <EyeIcon className="w-4 h-4" />
                                     </Link>
                                     <Link
-                                       href={`/admin/clientes/${cliente.id}/editar`}
+                                       href={`/clientes/${cliente.id}/editar`}
                                        className="text-green-600 hover:text-green-900 p-1 rounded hover:bg-green-50"
                                        title="Editar"
                                     >
@@ -355,24 +406,47 @@ export default function ClientesPage() {
             )}
          </div>
 
-         {/* Paginación */}
+         {/* Paginación Dinámica */}
          {meta.paginas > 1 && (
             <div className="flex items-center justify-between">
                <div className="flex items-center space-x-2">
                   <button
+                     onClick={() => handlePageChange(meta.pagina - 1)}
                      disabled={meta.pagina === 1}
-                     className="px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                     className="flex items-center gap-1 px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
+                     <ChevronLeftIcon className="w-4 h-4" />
                      Anterior
                   </button>
-                  <span className="px-3 py-2 text-sm text-gray-700">
-                     Página {meta.pagina} de {meta.paginas}
-                  </span>
+                  
+                  <div className="flex items-center space-x-1">
+                     {generatePageNumbers().map((page, index) => (
+                        <div key={index}>
+                           {page === '...' ? (
+                              <span className="px-3 py-2 text-gray-500">...</span>
+                           ) : (
+                              <button
+                                 onClick={() => handlePageChange(page as number)}
+                                 className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                                    meta.pagina === page
+                                       ? 'bg-blue-600 text-white'
+                                       : 'text-gray-700 hover:bg-gray-100'
+                                 }`}
+                              >
+                                 {page}
+                              </button>
+                           )}
+                        </div>
+                     ))}
+                  </div>
+
                   <button
+                     onClick={() => handlePageChange(meta.pagina + 1)}
                      disabled={meta.pagina === meta.paginas}
-                     className="px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                     className="flex items-center gap-1 px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                      Siguiente
+                     <ChevronRightIcon className="w-4 h-4" />
                   </button>
                </div>
                <div className="text-sm text-gray-600">

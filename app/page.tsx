@@ -6,10 +6,10 @@ export default function Home() {
          <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
             <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
                <Link
-                  href={'/admin'}
+                  href={'/dashboard'}
                   className="font-bold text-4xl"
                >
-                  Admin
+                  Dashboard
                </Link>
             </ol>
          </main>

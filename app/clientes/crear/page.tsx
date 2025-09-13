@@ -72,7 +72,7 @@ export default function CrearClientePage() {
                <p className="text-gray-600">Completa la información del cliente</p>
             </div>
             <a
-               href="/admin/clientes"
+               href="/clientes"
                className="text-gray-600 hover:text-gray-800 font-medium"
             >
                ← Volver a clientes
@@ -367,7 +367,7 @@ export default function CrearClientePage() {
             {/* Botones de Acción */}
             <div className="flex items-center justify-end gap-4 pt-6">
                <a
-                  href="/admin/clientes"
+                  href="/clientes"
                   className="px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 font-medium transition-colors"
                >
                   Cancelar

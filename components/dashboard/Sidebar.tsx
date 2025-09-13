@@ -49,15 +49,15 @@ export default function Sidebar() {
                </div>
 
                <NavMenu>
-                  <MenuItem icon={HomeIcon} link='/admin'>Escritorio</MenuItem>
+                  <MenuItem icon={HomeIcon} link='/dashboard'>Escritorio</MenuItem>
                   <SubMenu label="Usuarios">
-                     <MenuItem icon={UsersIcon} link='/admin/usuarios'>Todos los usuarios</MenuItem>
+                     <MenuItem icon={UsersIcon} link='/usuarios'>Todos los usuarios</MenuItem>
                   </SubMenu>
                   <SubMenu label="Clientes">
-                     <MenuItem icon={UsersIcon} link='/admin/clientes'>Todos los clientes</MenuItem>
-                     <MenuItem icon={UsersIcon} link='/admin/clientes/crear'>Crear cliente</MenuItem>
+                     <MenuItem icon={UsersIcon} link='/clientes'>Todos los clientes</MenuItem>
+                     <MenuItem icon={UsersIcon} link='/clientes/crear'>Crear cliente</MenuItem>
                   </SubMenu>
-                  <MenuItem icon={ChatBubbleBottomCenterTextIcon} link='/admin/tickes'>Tickes</MenuItem>
+                  <MenuItem icon={ChatBubbleBottomCenterTextIcon} link='/tickets'>Tickets</MenuItem>
                </NavMenu>
             </div>
          </aside>
