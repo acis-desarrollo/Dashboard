@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
+import DashboardLayout from "@/components/ui/DashboardLayout";
 import "./globals.css";
 
 const roboto = Roboto({
